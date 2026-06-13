@@ -30,14 +30,13 @@ def load_or_train_model():
         model.eval()
         return model
     else:
-        st.warning("⚠️ No pre-trained model found. Initializing automated dataset download and training setup...")
-        with st.spinner("Downloading StyleGAN3 dataset and training model (This may take a few minutes on Streamlit Cloud)..."):
+        # Handles dataset setup and initial training silently under a single spinner
+        with st.spinner("Downloading StyleGAN3 dataset and preparing model..."):
             # Trigger download and data loading
             train_loader, val_loader, class_names = get_data_loaders(batch_size=64)
             # Train for 1 fast epoch just to establish functionality
             model = train_model(model, train_loader, val_loader, epochs=1)
             model.eval()
-            st.success("🎉 Model trained successfully and ready for use!")
             return model
 
 # Initialize the model
