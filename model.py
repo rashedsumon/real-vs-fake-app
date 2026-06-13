@@ -4,10 +4,17 @@ from torchvision import models
 
 def build_model(num_classes=2):
     """
-    Creates a MobileNetV3 model modified for Binary Classification (Real vs Fake).
+    Creates a MobileNetV3 model modified for Binary Classification.
+    Works dynamically across older and newer versions of torchvision.
     """
-    # Use weights parameter instead of pretrained=True to comply with modern torchvision
-    model = models.mobilenet_v3_small(weights=models.MobileNetV3_Small_Weights.DEFAULT)
+    # Check if the modern Weights API is supported in the current torchvision version
+    if hasattr(models, "MobileNetV3_Small_Weights"):
+        # Modern way (torchvision >= 0.13)
+        weights = models.MobileNetV3_Small_Weights.DEFAULT
+        model = models.mobilenet_v3_small(weights=weights)
+    else:
+        # Legacy fallback way (torchvision < 0.13)
+        model = models.mobilenet_v3_small(pretrained=True)
     
     # Freeze the backbone parameters so we don't destroy pre-trained features
     for param in model.parameters():
