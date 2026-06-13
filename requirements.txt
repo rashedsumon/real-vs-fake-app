@@ -1,0 +1,5 @@
+streamlit
+kagglehub
+torch
+torchvision
+pillow
